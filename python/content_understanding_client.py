@@ -12,7 +12,6 @@ class AzureContentUnderstandingClient:
                  api_version: str,
                  subscription_key: str = None,
                  api_token: str = None,
-                 enable_face_identification: bool = False,
                  x_ms_useragent: str = "cu-sample-code"):
         if not subscription_key and not api_token:
             raise ValueError(
@@ -25,8 +24,7 @@ class AzureContentUnderstandingClient:
         self._endpoint = endpoint.rstrip("/")
         self._api_version = api_version
         self._logger = logging.getLogger(__name__)
-        self._headers = self._get_headers(subscription_key, api_token,
-                                          enable_face_identification, x_ms_useragent)
+        self._headers = self._get_headers(subscription_key, api_token, x_ms_useragent)
 
     def _get_analyzer_url(self, endpoint, api_version, analyzer_id):
         return f"{endpoint}/contentunderstanding/analyzers/{analyzer_id}?api-version={api_version}"  # noqa
@@ -45,8 +43,7 @@ class AzureContentUnderstandingClient:
             "prefix": storage_container_path_prefix,
         }
 
-    def _get_headers(self, subscription_key, api_token,
-                     enable_face_identification, x_ms_useragent):
+    def _get_headers(self, subscription_key, api_token, x_ms_useragent):
         """ Returns the headers for the HTTP requests. 
         Args:
             subscription_key (str): The subscription key for the service.
@@ -61,8 +58,6 @@ class AzureContentUnderstandingClient:
             "Authorization": f"Bearer {api_token}"
         }
         headers["x-ms-useragent"] = x_ms_useragent
-        if enable_face_identification:
-            headers["cogsvc-videoanalysis-face-identification-enable"] = "true"
         return headers
 
     def get_all_analyzers(self):

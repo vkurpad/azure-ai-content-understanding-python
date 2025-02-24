@@ -54,11 +54,12 @@ You can run this repo virtually by using GitHub Codespaces, which will open a we
 ### (Option 2) Manually create resources and set environment variables
 1. Create [Azure AI Services resource](docs/create_azure_ai_service.md)
 1. Go to `Access Control (IAM)` in resource, grant yourself role `Cognitive Services User`
+    - It's necessary even you are the owner of the resource
 1. Copy `notebooks/.env.sample` to `notebooks/.env`
 1. Fill **AZURE_AI_ENDPOINT** with the endpoint from your Azure portal Azure AI Services instance.
 1. Login Azure
    ```shell
-   az login
+   azd auth login
    ```
 
 ## Open a Jupyter notebook and follow the step-by-step guidance

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contoso Financial Services</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Add Markdown CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.1.0/github-markdown.min.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>Contoso Financial Services</h1>
+                    <p class="header-subtitle">Financial Analysis Agent</p>
+                </div>
+                <button id="clear-chat" class="clear-button" title="Clear chat history">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="chat-messages" id="chat-messages">
+            {% if chat_history|length == 0 %}
+            <div class="empty-chat">
+                <div class="welcome-message">
+                    <i class="fas fa-chart-line welcome-icon"></i>
+                    <h2>Welcome to Contoso Financial Services</h2>
+                    <p>Start a conversation or upload a financial document for analysis.</p>
+                </div>
+            </div>
+            {% else %}
+                {% for message in chat_history %}
+                    <div class="message {{ 'user-message' if message.sender == 'user' else 'agent-message' }}">
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="sender-name">{{ 'You' if message.sender == 'user' else 'Financial Analyst' }}</span>
+                                <span class="timestamp">{{ message.timestamp }}</span>
+                            </div>
+                            <div class="message-text markdown-body">{{ message.text | safe }}</div>
+                            {% if message.file_url %}
+                            <div class="file-attachment">
+                                <i class="fas fa-file-alt"></i>
+                                <a href="{{ message.file_url }}" target="_blank">View uploaded file</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        <div class="typing-indicator hidden" id="typing-indicator">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+        
+        <div class="chat-input-container">
+            <form id="chat-form" enctype="multipart/form-data">
+                <div class="file-input-container">
+                    <label for="file-input" class="file-button" title="Upload a file">
+                        <i class="fas fa-paperclip"></i>
+                    </label>
+                    <input type="file" id="file-input" name="file" class="hidden-file-input">
+                    <span id="file-name" class="file-name"></span>
+                </div>
+                <textarea id="message-input" placeholder="Type your message here..." rows="1"></textarea>
+                <button type="submit" class="send-button" disabled id="send-button">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
